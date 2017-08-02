@@ -4,7 +4,8 @@ sudo: false
 language: c++
 
 cache: 
-  - ${TRAVIS_BUILD_DIR}/cache-dir
+  directories:
+    - ${TRAVIS_BUILD_DIR}/cache-dir
 
 jobs:
   include:
