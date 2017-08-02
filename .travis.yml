@@ -12,6 +12,7 @@ addons:
       - gcc-5
       - g++-6
       - gcc-6
+      - ccache
 
       # OpenCV deps
       - libjpeg-dev 
@@ -46,9 +47,10 @@ env:
 
 jobs:
   include:
-    - stage: Prepare Cache I
-      script: bash ${SCRIPT_DIR}/install.sh -i ${CACHE_DIR} -b cmake,boost
-    - stage: Test 
+    - stage: Prepare Cache
+      compiler: gcc
+      script: bash ${SCRIPT_DIR}/install.sh -i ${CACHE_DIR} -b cmake,boost,glbinding,opencv
+    - stage: Test
       script: bash ${TRAVIS_BUILD_DIR}/test-cache.sh
 
 cache:

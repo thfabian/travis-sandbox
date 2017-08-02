@@ -24,13 +24,29 @@ fatal_error() {
   exit 1
 }
 
-# @brief Check if variable `$1` is definewd
+# @brief Install the <package>
 #
-# @param $1  Variable to check
-check_defined() {
-  if [ $1 = "" ]; then
-    fatal_error "variable '$1' is not defined"
-  fi 
+# The following is assumed:
+#   - The variable `<PACKGE>_VERSION` needs to exist.
+#   - The script `install_<package>.sh` needs to exist and contain a function `install_<package>`.
+#   - The function `install_<package>` has to take the <install-dir> as the first argument and 
+#     `<PACKAGE>_VERSION` as the second.
+#
+# @param $1   Install directory
+# @param $2   Package to install
+# @param $*   Additional arguments passed to the install function
+install_package() {
+  local install_dir=$1
+  local package=$2
+  local package_upper=$(echo $package | awk '{print toupper($0)}')
+  local package_version_var="${package_upper}_VERSION"
+
+  if [ -z ${!package_version_var+x} ]; then
+    fatal_error "variable '$package_version_var' is not defined"
+  fi
+
+  source "$this_script_dir/install_${package}.sh" || exit 1
+  "install_${package}" $install_dir ${!package_version_var} $*
 }
 
 # @brief Print the usage and exit with 0
@@ -100,19 +116,11 @@ IFS=', ' read -r -a split_package <<< "$packages"
 for package in "${split_package[@]}"
 do
   case $package in
-    boost)
-      source $this_script_dir/install_boost.sh;
-      if [ -z ${BOOST_VERSION+x} ]; then
-        fatal_error "variable 'BOOST_VERSION' is not defined"
-      fi
-      install_boost ${install_dir} ${BOOST_VERSION} atomic chrono date_time filesystem             \
-                                                    program_options thread;;
-    cmake)
-      source $this_script_dir/install_cmake.sh;
-      if [ -z ${CMAKE_VERSION+x} ]; then
-        fatal_error "variable 'CMAKE_VERSION' is not defined"
-      fi
-      install_cmake ${install_dir} ${CMAKE_VERSION};;
+    boost) install_package ${install_dir} boost atomic chrono date_time filesystem program_options \
+                                          thread;;
+    cmake) install_package ${install_dir} cmake;;
+    glbinding) install_package ${install_dir} glbinding;;
+    opencv) install_package ${install_dir} opencv;;
     *) 
       >&2 echo "$0: error: unknown package '$package'";
       exit 1;;
