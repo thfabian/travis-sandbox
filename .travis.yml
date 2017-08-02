@@ -9,9 +9,11 @@ cache:
 
 jobs:
   include:
-    - stage: Cache
+    - stage: Prepare Cache
       script: bash ${TRAVIS_BUILD_DIR}/prepare-cache.sh
+    - stage: Prepare Cache
       script: bash ${TRAVIS_BUILD_DIR}/prepare-cache.sh
     - stage: Test
       script: cat ${TRAVIS_BUILD_DIR}/cache-dir/test.txt
+    - stage: Test
       script: cat ${TRAVIS_BUILD_DIR}/cache-dir/text.txt
