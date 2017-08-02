@@ -47,7 +47,7 @@ env:
 jobs:
   include:
     - stage: Build Boost
-      script: echo $SCRIPT_DIR
+      script: ls $SCRIPT_DIR
     #     echo $TRAVIS_BUILD_DIR
     #     ls $SCRIPT_DIR
     #     ls $TRAVIS_BUILD_DIR
