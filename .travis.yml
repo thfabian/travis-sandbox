@@ -14,6 +14,6 @@ jobs:
     - stage: Prepare Cache
       script: bash ${TRAVIS_BUILD_DIR}/prepare-cache.sh
     - stage: Test
-      script: cat ${TRAVIS_BUILD_DIR}/cache-dir/test.txt
+      script: bash ${TRAVIS_BUILD_DIR}/test-cache.sh
     - stage: Test
-      script: cat ${TRAVIS_BUILD_DIR}/cache-dir/text.txt
+      script: bash $${TRAVIS_BUILD_DIR}/test-cache.sh
