@@ -16,4 +16,4 @@ jobs:
     - stage: Test
       script: bash ${TRAVIS_BUILD_DIR}/test-cache.sh
     - stage: Test
-      script: bash $${TRAVIS_BUILD_DIR}/test-cache.sh
+      script: bash ${TRAVIS_BUILD_DIR}/test-cache.sh
