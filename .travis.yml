@@ -47,7 +47,12 @@ env:
 jobs:
   include:
     - stage: Build Boost
-      script: bash ${SCRIPT_DIR}/install.sh -i ${CACHE_DIR} -b boost
+      script: |
+        echo $SCRIPT_DIR
+        echo $TRAVIS_BUILD_DIR
+        ls $SCRIPT_DIR
+        ls $TRAVIS_BUILD_DIR
+        bash ${SCRIPT_DIR}/install.sh -i ${CACHE_DIR} -b boost
     - stage: Test 
       script: bash ${TRAVIS_BUILD_DIR}/test-cache.sh
 
