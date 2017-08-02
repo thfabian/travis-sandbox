@@ -3,17 +3,56 @@ sudo: false
 
 language: c++
 
-cache: 
-  directories:
-    - ${TRAVIS_BUILD_DIR}/cache-dir
+addons:
+  apt:
+    sources: 
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-5
+      - gcc-5
+      - g++-6
+      - gcc-6
+
+      # OpenCV deps
+      - libjpeg-dev 
+      - libpng12-dev 
+      - libtiff4-dev 
+      - libjasper-dev 
+
+      # glfw3 deps
+      - xorg-dev 
+      - libglu1-mesa-dev
+      - libx11-6
+      - libxcursor1
+      - libxi6
+      - libxinerama1
+      - libxrandr2
+      - libxxf86vm1
+
+      # backward deps
+      - libdw-dev
+
+os:
+  - linux
+
+env:
+  global:
+    - SCRIPT_DIR=${TRAVIS_BUILD_DIR}/scripts/travis
+    - CACHE_DIR=${TRAVIS_BUILD_DIR}/deps/install
+    - BOOST_VERSION=1.63.0
+    - CMAKE_VERSION=3.8.1
+    - GLBINDING_VERSION=2.1.1
+    - OPENCV_VERSON=3.2.0
 
 jobs:
   include:
-    - stage: Prepare Cache
-      script: bash ${TRAVIS_BUILD_DIR}/prepare-cache.sh
-    - stage: Prepare Cache
-      script: bash ${TRAVIS_BUILD_DIR}/prepare-cache.sh
-    - stage: Test
+    - stage: Build Boost
+      script: bash ${SCRIPT_DIR}/install.sh -i ${CACHE_DIR} -b boost
+    - stage: Test 
       script: bash ${TRAVIS_BUILD_DIR}/test-cache.sh
-    - stage: Test
-      script: bash ${TRAVIS_BUILD_DIR}/test-cache.sh
+
+cache:
+  directories:
+    - ${CACHE_DIR}/boost-${BOOST_VERSION}
+    - ${CACHE_DIR}/glbinding-${GLBINDING_VERSION}
+    - ${CACHE_DIR}/opencv-${OPENCV_VERSON}
