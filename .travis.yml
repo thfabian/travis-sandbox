@@ -1,0 +1,11 @@
+cache: 
+  - ${TRAVIS_BUILD_DIR}/cache-dir
+
+jobs:
+  include:
+    - stage: prepare cache
+      script: prepare-cache.sh
+    - stage: test
+      script: ls ${TRAVIS_BUILD_DIR}/cache-dir
+    - stage: test
+      script: ls ${TRAVIS_BUILD_DIR}/cache-dir
