@@ -1,11 +1,16 @@
+dist: trusty
+sudo: false
+
+language: c++
+
 cache: 
   - ${TRAVIS_BUILD_DIR}/cache-dir
 
 jobs:
   include:
-    - stage: prepare cache
-      script: prepare-cache.sh
-    - stage: test
+    - stage: Build cache
+      script: bash ${TRAVIS_BUILD_DIR}/prepare-cache.sh
+    - stage: Test
       script: ls ${TRAVIS_BUILD_DIR}/cache-dir
-    - stage: test
+    - stage: Test
       script: ls ${TRAVIS_BUILD_DIR}/cache-dir
