@@ -52,7 +52,7 @@ jobs:
     #     ls $SCRIPT_DIR
     #     ls $TRAVIS_BUILD_DIR
     #     bash ${SCRIPT_DIR}/install.sh -i ${CACHE_DIR} -b boost
-    # - stage: Test 
+    - stage: Test 
       script: bash ${TRAVIS_BUILD_DIR}/test-cache.sh
 
 cache:
