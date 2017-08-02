@@ -3,34 +3,34 @@ sudo: false
 
 language: c++
 
-# addons:
-#   apt:
-#     sources: 
-#       - ubuntu-toolchain-r-test
-#     packages:
-#       - g++-5
-#       - gcc-5
-#       - g++-6
-#       - gcc-6
+addons:
+  apt:
+    sources: 
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-5
+      - gcc-5
+      - g++-6
+      - gcc-6
 
-#       # OpenCV deps
-#       - libjpeg-dev 
-#       - libpng12-dev 
-#       - libtiff4-dev 
-#       - libjasper-dev 
+      # OpenCV deps
+      - libjpeg-dev 
+      - libpng12-dev 
+      - libtiff4-dev 
+      - libjasper-dev 
 
-#       # glfw3 deps
-#       - xorg-dev 
-#       - libglu1-mesa-dev
-#       - libx11-6
-#       - libxcursor1
-#       - libxi6
-#       - libxinerama1
-#       - libxrandr2
-#       - libxxf86vm1
+      # glfw3 deps
+      - xorg-dev 
+      - libglu1-mesa-dev
+      - libx11-6
+      - libxcursor1
+      - libxi6
+      - libxinerama1
+      - libxrandr2
+      - libxxf86vm1
 
-#       # backward deps
-#       - libdw-dev
+      # backward deps
+      - libdw-dev
 
 os:
   - linux
@@ -46,9 +46,8 @@ env:
 
 jobs:
   include:
-    - stage: Build Boost
-      script: |
-        bash ${SCRIPT_DIR}/install.sh -i ${CACHE_DIR} -b boost
+    - stage: Prepare Cache I
+      script: bash ${SCRIPT_DIR}/install.sh -i ${CACHE_DIR} -b cmake,boost
     - stage: Test 
       script: bash ${TRAVIS_BUILD_DIR}/test-cache.sh
 
