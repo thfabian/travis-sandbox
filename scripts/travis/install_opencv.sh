@@ -33,6 +33,11 @@ install_opencv() {
   
   local opencv_install_dir=$install_dir/opencv-$opencv_version
 
+  abort_and_cleanup() {
+    rm -rf $opencv_install_dir && mkdir -p $opencv_install_dir 
+    fatal_error "$1"
+  }
+
   NOTICE "${FUNCNAME[0]}: Installing opencv $opencv_version into \"$opencv_install_dir\""
   mkdir -p ${opencv_install_dir}
   if [[ ! -z "$(ls -A ${opencv_install_dir})" ]]; then
@@ -44,7 +49,7 @@ install_opencv() {
     NOTICE "${FUNCNAME[0]}: Downloading opencv $opencv_url ..."
     { wget --no-check-certificate -O - ${opencv_url} |                                             \
       tar --strip-components=1 -xz -C ${opencv_install_dir}; } ||                                  \
-      fatal_error "failed to download opencv from: $opencv_url"
+      abort_and_cleanup "Failed to download opencv from: $opencv_url"
     NOTICE "${FUNCNAME[0]}: Successfully downloaded $opencv_url"
 
     cd ${opencv_install_dir}
@@ -140,8 +145,9 @@ install_opencv() {
               -DWITH_VTK:BOOL=OFF                                                                  \
               -DWITH_WEBP:BOOL=OFF                                                                 \
               -DWITH_XIMEA:BOOL=OFF                                                                \
-              -DWITH_XINE:BOOL=OFF
-    make -j2 install
+              -DWITH_XINE:BOOL=OFF                                                                 \
+          || abort_and_cleanup "Failed to configure opencv"
+    make -j2 install || abort_and_cleanup "Failed to build opencv"
   fi
   
   local elapsed_time=$(expr $(date +%s) - $start_time)

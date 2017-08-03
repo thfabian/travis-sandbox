@@ -36,6 +36,11 @@ install_boost() {
   
   local boost_install_dir=$install_dir/boost-$boost_version
   local boost_version_underscore=${boost_version//\./_}
+  
+  abort_and_cleanup() {
+    rm -rf $boost_install_dir && mkdir -p $boost_install_dir
+    fatal_error "$1"
+  }
 
   NOTICE "${FUNCNAME[0]}: Installing boost $boost_version into \"$boost_install_dir\" ..."
   mkdir -p ${boost_install_dir}
@@ -48,7 +53,7 @@ install_boost() {
     NOTICE "${FUNCNAME[0]}: Downloading boost $boost_url ..."
     { wget --no-check-certificate -O - ${boost_url} |                                              \
       tar --strip-components=1 -xz -C ${boost_install_dir}; } ||                                   \
-      fatal_error "failed to download boost from: $boost_url"
+      abort_and_cleanup "Failed to download boost from: $boost_url"
     NOTICE "${FUNCNAME[0]}: Successfully downloaded $boost_url"
 
     cd ${boost_install_dir}
@@ -63,10 +68,10 @@ install_boost() {
     done
 
     NOTICE "${FUNCNAME[0]}: Starting to build boost ..."
-    ./bootstrap.sh
+    ./bootstrap.sh || abort_and_cleanup "Failed to configure boost"
     ./b2 -j2 --toolset=gcc-${gcc_version} --prefix=${boost_install_dir}                            \
              --user-config=${boost_install_dir}/user-config.jam                                    \
-             ${boost_components_arg} install
+             ${boost_components_arg} install || abort_and_cleanup "Failed to build boost"
   fi
   
   local elapsed_time=$(expr $(date +%s) - $start_time)

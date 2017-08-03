@@ -34,6 +34,11 @@ install_cmake() {
   local cmake_install_dir=$install_dir/cmake-$cmake_version
   local cmake_version_short=${cmake_version%.*}
 
+  abort_and_cleanup() {
+    rm -rf $cmake_install_dir && mkdir -p $cmake_install_dir 
+    fatal_error "$1"
+  }
+
   NOTICE "${FUNCNAME[0]}: Installing cmake $cmake_version into \"$cmake_install_dir\" ..."
   mkdir -p ${cmake_install_dir}
   if [[ ! -z "$(ls -A ${cmake_install_dir})" ]]; then
@@ -43,9 +48,9 @@ install_cmake() {
                       ${cmake_version_short} ${cmake_version})
 
     NOTICE "${FUNCNAME[0]}: Downloading cmake $cmake_url ..."
-    { wget --no-check-certificate -O - ${cmake_url} |                                                \
-      tar --strip-components=1 -xz -C ${cmake_install_dir}; } ||                                     \
-      fatal_error "failed to download cmake from: $cmake_url"
+    { wget --no-check-certificate -O - ${cmake_url} |                                              \
+      tar --strip-components=1 -xz -C ${cmake_install_dir}; } ||                                   \
+      abort_and_cleanup "Failed to download cmake from: $cmake_url"
     NOTICE "${FUNCNAME[0]}: Successfully downloaded $cmake_url"
   fi
 

@@ -33,6 +33,11 @@ install_glbinding() {
   
   local glbinding_install_dir=$install_dir/glbinding-$glbinding_version
 
+  abort_and_cleanup() {
+    rm -rf $glbinding_install_dir && mkdir -p $glbinding_install_dir 
+    fatal_error "$1"
+  }
+
   NOTICE "${FUNCNAME[0]}: Installing glbinding $glbinding_version into \"$glbinding_install_dir\""
   mkdir -p ${glbinding_install_dir}
   if [[ ! -z "$(ls -A ${glbinding_install_dir})" ]]; then
@@ -44,7 +49,7 @@ install_glbinding() {
     NOTICE "${FUNCNAME[0]}: Downloading glbinding $glbinding_url ..."
     { wget --no-check-certificate -O - ${glbinding_url} |                                          \
       tar --strip-components=1 -xz -C ${glbinding_install_dir}; } ||                               \
-      fatal_error "failed to download glbinding from: $glbinding_url"
+      abort_and_cleanup "failed to download glbinding from: $glbinding_url"
     NOTICE "${FUNCNAME[0]}: Successfully downloaded $glbinding_url"
 
     cd ${glbinding_install_dir}
@@ -52,8 +57,9 @@ install_glbinding() {
     mkdir build && cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release -DOPTION_BUILD_DOCS:BOOL=OFF                               \
              -DOPTION_BUILD_EXAMPLES:BOOL=OFF -DOPTION_BUILD_TESTS:BOOL=OFF                        \
-             -DCMAKE_INSTALL_PREFIX=${glbinding_install_dir}
-    make -j2 install
+             -DCMAKE_INSTALL_PREFIX=${glbinding_install_dir}                                       \
+          || abort_and_cleanup "Failed to configure glbinding"
+    make -j2 install || abort_and_cleanup "Failed to build glbinding"
   fi
   
   local elapsed_time=$(expr $(date +%s) - $start_time)

@@ -37,7 +37,10 @@ fatal_error() {
 # @param $*   Additional arguments passed to the install function
 install_package() {
   local install_dir=$1
-  local package=$2
+  shift
+  local package=$1
+  shift
+  local args=$*
   local package_upper=$(echo $package | awk '{print toupper($0)}')
   local package_version_var="${package_upper}_VERSION"
 
@@ -46,7 +49,7 @@ install_package() {
   fi
 
   source "$this_script_dir/install_${package}.sh" || exit 1
-  "install_${package}" $install_dir ${!package_version_var} $*
+  "install_${package}" $install_dir ${!package_version_var} $args
 }
 
 # @brief Print the usage and exit with 0
