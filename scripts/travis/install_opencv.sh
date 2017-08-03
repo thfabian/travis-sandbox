@@ -154,6 +154,6 @@ install_opencv() {
   NOTICE $(printf "${FUNCNAME[0]}: Successfully installed opencv %s (took %dm %ds)\n"              \
            $opencv_version $(($elapsed_time%3600/60)) $(($elapsed_time%60)))
 
-  export opencv_ROOT="${opencv_install_dir}"
+  export OpenCV_DIR="${opencv_install_dir}"
   popd
 }
