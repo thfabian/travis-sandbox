@@ -3,10 +3,13 @@ sudo: false
 
 language: c++
 
+&sources:
+  - ubuntu-toolchain-r-test
+
 addons:
   apt:
     sources: 
-      - ubuntu-toolchain-r-test
+      - *sources
     packages:
       - g++-5
       - gcc-5
@@ -58,3 +61,7 @@ cache:
     - ${CACHE_DIR}/boost-${BOOST_VERSION}
     - ${CACHE_DIR}/glbinding-${GLBINDING_VERSION}
     - ${CACHE_DIR}/opencv-${OPENCV_VERSION}
+
+notifications:
+  on_success: never
+  on_failure: never
