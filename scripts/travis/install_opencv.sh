@@ -99,6 +99,7 @@ install_opencv() {
               -DBUILD_opencv_videostab:BOOL=OFF                                                    \
               -DBUILD_opencv_world:BOOL=OFF                                                        \
               -DBUILD_opencv_python3:BOOL=OFF                                                      \
+              -DBUILD_opencv_java:BOOL=OFF                                                         \
                                                                                                    \
               -DWITH_PNG:BOOL=ON                                                                   \
               -DWITH_TIFF:BOOL=ON                                                                  \
